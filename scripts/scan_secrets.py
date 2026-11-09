@@ -18,7 +18,7 @@ PATRONES = {
     "Slack token": re.compile(r"\bxox[baprs]-[0-9A-Za-z-]{10,}\b"),
     "Anthropic/OpenAI key": re.compile(r"\bsk-[A-Za-z0-9_\-]{20,}\b"),
     "Credencial asignada en codigo": re.compile(
-        r"""(?ix)\b(?:password|passwd|pwd|contrasena|secret|api[_-]?key|apikey|token|access[_-]?key)\w*\s*[:=]\s*
+        r"""(?ix)[\w.-]*(?:password|passwd|pwd|contrasena|secret|api[_-]?key|apikey|token|access[_-]?key)\w*\s*[:=]\s*
         (?P<q>["'])(?P<v>[^"'\s]{6,})(?P=q)"""),
     "URL con usuario:clave": re.compile(r"[a-z][a-z0-9+.\-]*://[^/\s:@]+:[^/\s:@]+@[^/\s]+", re.I),
 }
