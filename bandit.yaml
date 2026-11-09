@@ -1,0 +1,4 @@
+# Bandit (analisis estatico de seguridad). Se omiten solo reglas sobre subprocess, porque
+# todos los usos en el proyecto llaman a ejecutables fijos con lista de argumentos
+# (sin shell=True y sin datos del usuario).
+skips: [B404, B603, B607]
