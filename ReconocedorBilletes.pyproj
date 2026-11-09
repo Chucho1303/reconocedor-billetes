@@ -18,16 +18,28 @@
   <ItemGroup>
     <Compile Include="Iniciar_Visual_Studio.py" />
     <Compile Include="Back\billetes.py" />
+    <Compile Include="Back\billetes_config.py" />
     <Compile Include="Front\app.py" />
+    <Compile Include="scripts\*.py" />
+    <Compile Include="tests\*.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="requirements.txt" />
+    <Content Include="requirements*.txt" />
+    <Content Include="Dockerfile" />
+    <Content Include="docker-compose.yml" />
+    <Content Include=".env.example" />
+    <Content Include=".github\**\*" />
+    <Content Include="docs\*.md" />
+    <Content Include="*.md" />
     <Content Include=".streamlit\config.toml" />
     <Content Include="Back\plantillas\**\*" />
     <Content Include="Front\ejemplos\**\*" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Ejecucion\" />
+    <Folder Include="scripts\" />
+    <Folder Include="tests\" />
+    <Folder Include="docs\" />
     <Folder Include="Back\plantillas\20\" />
     <Folder Include="Back\plantillas\50\" />
     <Folder Include="Back\plantillas\100\" />
