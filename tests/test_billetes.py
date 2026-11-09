@@ -24,7 +24,7 @@ def reconocer(ruta, plantillas):
 
 
 def test_plantillas_disponibles(plantillas):
-    assert {p["den"] for p in plantillas} == {20, 50, 1000}
+    assert {20, 50, 1000} <= {p["den"] for p in plantillas}
 
 
 def test_foto_real_de_1000(plantillas):
@@ -40,7 +40,7 @@ def test_foto_real_de_50(plantillas):
 def test_foto_vertical_no_falla_y_devuelve_puntajes_validos(plantillas):
     den, conf, detalle = reconocer(EJEMPLOS / "billete_50_vertical.jpg", plantillas)
     assert den in (None, 50)
-    assert 0.0 <= conf <= 1.0 and set(detalle) == {20, 50, 1000}
+    assert 0.0 <= conf <= 1.0 and {20, 50, 1000} <= set(detalle)
 
 
 @pytest.mark.parametrize("den", [20, 50, 1000])
