@@ -20,4 +20,4 @@ venv/
 *.user
 
 # Generados en ejecucion
-captura_*.jpg
+/captura_*.jpg
