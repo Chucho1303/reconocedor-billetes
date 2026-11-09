@@ -1,0 +1,14 @@
+# Despliegue con un solo comando:  docker compose up --build
+# La configuracion llega por variables de entorno (archivo .env local, nunca versionado).
+services:
+  reconocedor:
+    build: .
+    image: reconocedor-billetes:latest
+    ports:
+      - "8501:8501"
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
