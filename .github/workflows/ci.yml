@@ -1,0 +1,100 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  commits:
+    name: Calidad de commits (Conventional Commits + tarea)
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validar mensajes del PR
+        run: python3 scripts/check_commit_msg.py --range "origin/${{ github.base_ref }}..HEAD"
+
+  test:
+    name: Pruebas automaticas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -v
+
+  security:
+    name: Seguridad, dependencias y licencias
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - name: Secretos escritos en el codigo
+        run: python scripts/scan_secrets.py
+      - name: Analisis estatico (bandit)
+        run: bandit -q -c bandit.yaml -r Back Front Iniciar_Visual_Studio.py scripts
+      - name: Vulnerabilidades conocidas en dependencias
+        run: pip-audit -r requirements.lock.txt
+      - name: Licencias compatibles con la politica
+        run: python scripts/check_licenses.py
+
+  docker:
+    name: Imagen Docker (build + prueba de arranque)
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir imagen
+        run: docker build -t reconocedor-billetes:ci .
+      - name: Arrancar y esperar el healthcheck
+        run: |
+          docker run -d --name app -p 8501:8501 reconocedor-billetes:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8501/_stcore/health; then echo; exit 0; fi
+            sleep 2
+          done
+          docker logs app
+          exit 1
+
+  publish:
+    name: Publicar imagen (solo en tags vX.Y.Z)
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [docker]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            ghcr.io/${{ github.repository }}:latest
