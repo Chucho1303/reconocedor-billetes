@@ -1,0 +1,2 @@
+Esta carpeta necesita fotografías reales del billete de $200 MXN.
+Agrega aquí imágenes JPG/PNG del billete completo. También puedes usar registrar_plantilla.bat.
