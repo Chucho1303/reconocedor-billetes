@@ -11,17 +11,19 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 BACK_DIR = ROOT_DIR / "Back"
 sys.path.insert(0, str(BACK_DIR))
 
-import cv2
-import numpy as np
-import streamlit as st
+import billetes_config as cfg  # noqa: E402  (debe ir antes que cv2)
 
-import billetes
+import cv2  # noqa: E402
+import numpy as np  # noqa: E402
+import streamlit as st  # noqa: E402
+
+import billetes  # noqa: E402
 
 BASE_DIR = Path(__file__).resolve().parent
 EJEMPLOS = sorted(p for p in (BASE_DIR / "ejemplos").glob("*")
                   if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp"))
-EQUIPO = ["Integrante 1", "Integrante 2", "Integrante 3"]   # <- escribe aquí los nombres del equipo
-GRUPO = ""                                                   # <- y el grupo
+EQUIPO = cfg.EQUIPO   # se define con la variable de entorno BILLETES_EQUIPO (nombres separados por ;)
+GRUPO = cfg.GRUPO     # se define con BILLETES_GRUPO
 
 st.set_page_config(page_title="Reconocedor de billetes mexicanos", page_icon="💵", layout="wide")
 
@@ -79,8 +81,15 @@ def obtener_plantillas():
 
 
 def leer_imagen(archivo):
-    datos = np.frombuffer(archivo.getvalue(), dtype=np.uint8)
-    return cv2.imdecode(datos, cv2.IMREAD_COLOR)
+    """Decodifica la imagen subida validando tamano y contenido. Devuelve None si no es valida."""
+    contenido = archivo.getvalue()
+    if len(contenido) > cfg.MAX_UPLOAD_MB * 1024 * 1024:
+        st.error("La imagen supera el máximo de %d MB." % cfg.MAX_UPLOAD_MB)
+        return None
+    img = cv2.imdecode(np.frombuffer(contenido, dtype=np.uint8), cv2.IMREAD_COLOR)
+    if img is None:
+        st.error("El archivo no es una imagen válida o está dañado.")
+    return img
 
 
 def bgr_a_rgb(img):

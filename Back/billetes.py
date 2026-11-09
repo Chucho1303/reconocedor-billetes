@@ -5,20 +5,23 @@ import sys
 from collections import Counter, deque
 from glob import glob
 
-import cv2
-import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import billetes_config as cfg  # noqa: E402  (debe ir antes que cv2)
+
+import cv2  # noqa: E402
+import numpy as np  # noqa: E402
 
 # --------------------------------------------------------------------------
 # Configuracion
 # --------------------------------------------------------------------------
 DENOMINACIONES = (20, 50, 100, 200, 500, 1000)
-CARPETA_PLANTILLAS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "plantillas")
+CARPETA_PLANTILLAS = cfg.CARPETA_PLANTILLAS   # configurable con BILLETES_PLANTILLAS
 EXTENSIONES = (".jpg", ".jpeg", ".png", ".bmp", ".webp")
 
 ANCHO, ALTO = 600, 280          
 PESO_COLOR, PESO_ORB = 0.35, 0.65
 INLIERS_REF = 40                
-UMBRAL_ACEPTACION = 0.35        
+UMBRAL_ACEPTACION = cfg.UMBRAL_ACEPTACION   # configurable con BILLETES_UMBRAL
 FRAMES_VOTO = 7                 
 VOTOS_MINIMOS = 4
 
