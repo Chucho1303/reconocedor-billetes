@@ -15,6 +15,7 @@ Aplicación web hecha con **Streamlit** y **OpenCV** que estima la denominación
   - `Iniciar_Visual_Studio.py`, `ReconocedorBilletes.sln` y `.pyproj` (Visual Studio);
   - `Dockerfile`, `docker-compose.yml`, `requirements*.txt`, `.env.example`;
   - `scripts/` (secretos, licencias, commits), `hooks/`, `tests/` y `docs/` (seguridad, licencias, backlog).
+- **`fullstack/`**: vista general del proyecto y `tickets/` (un archivo por tarea, con su índice).
 - **`.github/`**: CI/CD (`workflows/ci.yml`), Dependabot, plantilla de PR, `CONTRIBUTING.md` y `SECURITY.md`.
 - **`requirements.txt`** (raíz): copia de `Ejecucion/requirements.txt`, necesaria para Streamlit Cloud.
 
