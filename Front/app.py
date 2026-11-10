@@ -1,9 +1,11 @@
 """Interfaz web del reconocedor de billetes mexicanos (Streamlit + OpenCV).
 
 Reutiliza el algoritmo de ``billetes.py``: segmenta el billete, lo clasifica y
-muestra el resultado, los puntajes y la imagen rectificada.
+muestra el resultado, los puntajes y la imagen rectificada. Incluye lectura en
+voz alta del resultado para facilitar el uso a personas ciegas.
 """
 from pathlib import Path
+import json
 import sys
 
 # Permite importar el motor ubicado en la carpeta Back.
@@ -208,9 +210,10 @@ st.markdown(
       <div class="bill">💵</div>
       <h1>Reconocedor de<br>billetes mexicanos</h1>
       <p>Sube una foto o usa tu cámara y descubre al instante cuántos <b>pesos</b> vale el billete,
-         con su nivel de confianza y el análisis completo.</p>
+         con su nivel de confianza y el análisis completo. El resultado también se lee en voz alta.</p>
       <span class="chip">Visión por computadora</span><span class="chip">OpenCV</span>
       <span class="chip">Histograma HSV</span><span class="chip">ORB + RANSAC</span>
+      <span class="chip">🔊 Lectura en voz alta</span>
     </div>
     """,
     unsafe_allow_html=True,
@@ -245,6 +248,45 @@ def mostrar_imagen(img, **kwargs):
         st.image(img, width="stretch", **kwargs)
     except TypeError:
         st.image(img, use_container_width=True, **kwargs)
+
+
+def hablar(texto, auto=True):
+    """Lee el texto en voz alta con la voz del navegador y muestra un boton para repetirlo.
+
+    Usa ``speechSynthesis`` (no requiere instalar nada). Algunos navegadores bloquean
+    la voz automatica hasta que la persona toca la pantalla; por eso se incluye el boton.
+    """
+    texto_js = json.dumps(texto)
+    autoejecutar = "setTimeout(decir, 500);" if auto else ""
+    html = """
+        <style>
+          body {margin: 0; background: transparent; font-family: 'Poppins', Arial, sans-serif;}
+          button {width: 100%; padding: 16px; font-size: 20px; font-weight: 800; border: none;
+                  border-radius: 16px; background: #00E676; color: #00160a; cursor: pointer;
+                  box-shadow: 0 0 18px rgba(0,230,118,.5);}
+          button:active {transform: scale(.98);}
+        </style>
+        <button id="b" aria-label="Escuchar el resultado en voz alta">🔊 Escuchar resultado</button>
+        <script>
+          const texto = __TEXTO__;
+          function decir() {
+            try {
+              const s = window.speechSynthesis;
+              s.cancel();
+              const u = new SpeechSynthesisUtterance(texto);
+              u.lang = 'es-MX';
+              u.rate = 0.9;
+              const voces = s.getVoices();
+              const v = voces.find(x => x.lang === 'es-MX') || voces.find(x => x.lang && x.lang.startsWith('es'));
+              if (v) u.voice = v;
+              s.speak(u);
+            } catch (e) {}
+          }
+          document.getElementById('b').onclick = decir;
+          __AUTO__
+        </script>
+        """
+    components.html(html.replace("__TEXTO__", texto_js).replace("__AUTO__", autoejecutar), height=76)
 
 
 plantillas = obtener_plantillas()
@@ -298,13 +340,17 @@ with tab_probar:
             mostrar_imagen(bgr_a_rgb(anotada))
         with der:
             if denominacion is not None:
-                st.markdown('<div class="res ok" translate="no"><div class="sub">✅ BILLETE IDENTIFICADO · PESOS MEXICANOS (MXN)</div>'
+                st.markdown('<div class="res ok" translate="no" role="status" aria-live="polite">'
+                            '<div class="sub">✅ BILLETE IDENTIFICADO · PESOS MEXICANOS (MXN)</div>'
                             '<div class="big">%d pesos</div><div class="conf">Confianza %.1f%%</div></div>'
                             % (denominacion, confianza * 100), unsafe_allow_html=True)
+                hablar("Tu billete es de %d pesos." % denominacion)
             else:
-                st.markdown('<div class="res no"><div class="sub">⚠️ No se pudo identificar con suficiente confianza</div>'
+                st.markdown('<div class="res no" role="status" aria-live="polite">'
+                            '<div class="sub">⚠️ No se pudo identificar con suficiente confianza</div>'
                             '<div class="big">No reconocido</div><div class="conf">Mejor puntaje %.1f%%</div></div>'
                             % (confianza * 100), unsafe_allow_html=True)
+                hablar("No pude reconocer el billete. Intenta con más luz y muestra el billete completo.")
             st.progress(float(min(max(confianza, 0.0), 1.0)))
             c1, c2 = st.columns(2)
             c1.metric("Segmentación", "Detectado" if valido else "Imagen completa")
@@ -341,6 +387,10 @@ with tab_acerca:
     with der:
         st.subheader("Equipo")
         st.markdown("\n".join("- %s" % n for n in EQUIPO) + "\n\n**Profesor:** Víctor Antonio Flores Lezama")
+    st.subheader("Accesibilidad")
+    st.markdown("- El resultado se **lee en voz alta** (por ejemplo: «Tu billete es de 50 pesos»).\n"
+                "- Si la voz no se activa sola, toca el botón **🔊 Escuchar resultado**.\n"
+                "- Compatible con lectores de pantalla como TalkBack y VoiceOver.")
     st.subheader("Limitaciones")
     st.markdown("- Solo reconoce las denominaciones con plantilla registrada (activas arriba).\n"
                 "- Funciona mejor con buena luz y fondo liso.\n"
