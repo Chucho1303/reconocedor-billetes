@@ -1,6 +1,6 @@
 # Tickets del proyecto
 
-Un archivo por tarea del [backlog](../BACKLOG.md). El número del ticket es el `#N` que se usa en los commits
+Un archivo por tarea del [backlog](../../Ejecucion/docs/BACKLOG.md). El número del ticket es el `#N` que se usa en los commits
 (`feat(back): agrega ... (#5)`), según `.github/CONTRIBUTING.md`.
 
 > **Registro retroactivo:** estos tickets se redactaron el 2026-11-10 a partir del trabajo ya realizado. Las fechas de «Trabajo realizado» son las de los commits reales del repositorio (el historial empieza el 2026-10-19).

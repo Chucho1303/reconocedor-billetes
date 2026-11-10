@@ -21,4 +21,4 @@ nuevo y vacío (GitHub numera los issues en orden: #1, #2, …).
 | 13 | Plantillas de $100, $200 y $500 (faltan fotografías reales) | Pendiente |
 | 14 | Lectura en voz alta del resultado (accesibilidad) | Hecho |
 
-El detalle de cada tarea (descripción, criterios de aceptación y cómo verificarla) está en `Ejecucion/docs/tickets/`.
+El detalle de cada tarea (descripción, criterios de aceptación y cómo verificarla) está en `fullstack/tickets/`.
