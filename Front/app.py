@@ -16,6 +16,7 @@ import billetes_config as cfg  # noqa: E402  (debe ir antes que cv2)
 import cv2  # noqa: E402
 import numpy as np  # noqa: E402
 import streamlit as st  # noqa: E402
+import streamlit.components.v1 as components  # noqa: E402
 
 import billetes  # noqa: E402
 
@@ -27,44 +28,186 @@ GRUPO = cfg.GRUPO     # se define con BILLETES_GRUPO
 
 st.set_page_config(page_title="Reconocedor de billetes mexicanos", page_icon="💵", layout="wide")
 
+# Evita que el traductor del navegador convierta "$20" en "20 dólares".
+try:
+    components.html(
+        """<script>
+        try {
+          const d = window.parent.document;
+          d.documentElement.lang = 'es';
+          d.documentElement.setAttribute('translate', 'no');
+          if (!d.querySelector('meta[name=google]')) {
+            const m = d.createElement('meta'); m.name = 'google'; m.content = 'notranslate'; d.head.appendChild(m);
+          }
+        } catch (e) {}
+        </script>""",
+        height=0,
+    )
+except Exception:
+    pass
+
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
     html, body, [class*="st-"], .stMarkdown {font-family: 'Poppins', sans-serif;}
-    .block-container {padding-top: 1.4rem; max-width: 1200px;}
-    @keyframes flota {0%,100% {transform: translateY(0) rotate(-6deg);} 50% {transform: translateY(-10px) rotate(6deg);}}
+
+    /* ================= FONDO ANIMADO ================= */
+    .stApp {background: #020403 !important;}
+    [data-testid="stAppViewContainer"], [data-testid="stHeader"], .stApp > header {background: transparent !important;}
+    .block-container {position: relative; z-index: 2; padding-top: 1.4rem; max-width: 1200px;}
+
+    /* Aurora que se mueve */
+    .stApp::before {content: ""; position: fixed; inset: -25%; z-index: 0; pointer-events: none; filter: blur(46px);
+        background:
+          radial-gradient(circle at 18% 28%, rgba(0,230,118,.34), transparent 38%),
+          radial-gradient(circle at 82% 18%, rgba(0,184,212,.28), transparent 38%),
+          radial-gradient(circle at 62% 82%, rgba(124,77,255,.26), transparent 40%),
+          radial-gradient(circle at 12% 85%, rgba(0,200,83,.22), transparent 36%);
+        animation: aurora 16s ease-in-out infinite alternate;}
+    @keyframes aurora {
+        0%   {transform: translate(0,0) scale(1) rotate(0deg);}
+        50%  {transform: translate(6%,4%) scale(1.15) rotate(7deg);}
+        100% {transform: translate(-6%,-5%) scale(1.06) rotate(-7deg);}}
+
+    /* Cuadricula tecnologica en movimiento */
+    .stApp::after {content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+        background-image: linear-gradient(rgba(0,230,118,.07) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(0,230,118,.07) 1px, transparent 1px);
+        background-size: 52px 52px;
+        -webkit-mask-image: radial-gradient(ellipse at 50% 25%, #000 10%, transparent 75%);
+                mask-image: radial-gradient(ellipse at 50% 25%, #000 10%, transparent 75%);
+        animation: rejilla 22s linear infinite;}
+    @keyframes rejilla {from {background-position: 0 0, 0 0;} to {background-position: 0 52px, 52px 0;}}
+
+    /* Billetes flotando */
+    .flotantes {position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;}
+    .flotantes span {position: absolute; bottom: -80px; font-size: 2.6rem; opacity: 0; filter: blur(.4px);
+                     animation: sube 16s linear infinite;}
+    .flotantes span:nth-child(1) {left: 6%;  animation-duration: 17s; animation-delay: 0s;}
+    .flotantes span:nth-child(2) {left: 22%; animation-duration: 21s; animation-delay: 4s;  font-size: 2rem;}
+    .flotantes span:nth-child(3) {left: 41%; animation-duration: 18s; animation-delay: 8s;}
+    .flotantes span:nth-child(4) {left: 63%; animation-duration: 23s; animation-delay: 2s;  font-size: 3.2rem;}
+    .flotantes span:nth-child(5) {left: 80%; animation-duration: 19s; animation-delay: 6s;  font-size: 2.2rem;}
+    .flotantes span:nth-child(6) {left: 92%; animation-duration: 25s; animation-delay: 10s;}
+    @keyframes sube {
+        0%   {transform: translateY(0) rotate(-12deg); opacity: 0;}
+        10%  {opacity: .22;}
+        90%  {opacity: .22;}
+        100% {transform: translateY(-115vh) rotate(18deg); opacity: 0;}}
+
+    /* ================= TEXTO LEGIBLE ================= */
+    .stApp, .stApp p, .stApp label, .stApp span, .stApp li {color: #F2F2F2;}
+    .stApp h1, .stApp h2, .stApp h3 {color: #FFFFFF; font-weight: 800;}
+    .stApp strong {color: #FFFFFF;}
+    [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] * {color: #b9cfc0 !important;}
+    [data-testid="stToolbar"] *, [data-testid="stHeader"] * {color: #FFFFFF !important;}
+
+    @keyframes flota {0%,100% {transform: translateY(0) rotate(-6deg);} 50% {transform: translateY(-12px) rotate(6deg);}}
     @keyframes brilla {0% {background-position: 0% 50%;} 100% {background-position: 200% 50%;}}
-    .hero {position: relative; overflow: hidden; color: #fff; border-radius: 24px; padding: 2.4rem 2.6rem;
-           background: linear-gradient(120deg, #2F3E14, #4F6228, #6B7F3A, #A3BF4A, #4F6228);
-           background-size: 250% 100%; animation: brilla 9s linear infinite; box-shadow: 0 12px 34px rgba(79,98,40,.35);}
-    .hero h1 {color: #fff; font-weight: 800; font-size: 2.7rem; line-height: 1.1; margin: 0; padding: 0;}
-    .hero p {font-size: 1.1rem; opacity: .93; margin: .7rem 0 0 0; max-width: 680px;}
-    .hero .bill {position: absolute; right: 2.5rem; top: 1.2rem; font-size: 5.5rem; animation: flota 4s ease-in-out infinite;}
-    .chip {display: inline-block; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.35);
-           border-radius: 999px; padding: .2rem .9rem; margin: 1rem .45rem 0 0; font-size: .85rem;}
-    .pill {display: inline-block; border-radius: 12px; padding: .5rem 1rem; margin: .3rem .4rem .3rem 0;
+    @keyframes pulso {0%,100% {box-shadow: 0 0 0 0 rgba(0,230,118,.45);} 50% {box-shadow: 0 0 0 14px rgba(0,230,118,0);}}
+
+    /* ================= HERO ================= */
+    .hero {position: relative; overflow: hidden; color: #fff; border-radius: 28px; padding: 2.6rem 2.8rem;
+           background: radial-gradient(circle at 85% 20%, rgba(0,230,118,.30), transparent 45%),
+                       linear-gradient(120deg, rgba(2,10,5,.88), rgba(6,33,15,.88), rgba(11,59,28,.88), rgba(6,33,15,.88), rgba(2,10,5,.88));
+           background-size: 100% 100%, 250% 100%; animation: brilla 10s linear infinite;
+           border: 1px solid rgba(0,230,118,.4); box-shadow: 0 0 44px rgba(0,230,118,.22);
+           backdrop-filter: blur(6px);}
+    .hero h1 {color: #fff; font-weight: 800; font-size: 2.9rem; line-height: 1.1; margin: 0; padding: 0;
+              text-shadow: 0 0 22px rgba(0,230,118,.5);}
+    .hero p {font-size: 1.1rem; color: #d6f2df; margin: .8rem 0 0 0; max-width: 680px;}
+    .hero .bill {position: absolute; right: 2.5rem; top: 1.2rem; font-size: 5.8rem; animation: flota 4s ease-in-out infinite;
+                 filter: drop-shadow(0 0 18px rgba(0,230,118,.65));}
+    .chip {display: inline-block; background: rgba(0,230,118,.12); border: 1px solid rgba(0,230,118,.5);
+           color: #8dffbc; border-radius: 999px; padding: .25rem 1rem; margin: 1.1rem .45rem 0 0; font-size: .85rem;}
+
+    /* ================= DENOMINACIONES ================= */
+    .pill {display: inline-block; border-radius: 12px; padding: .5rem 1.1rem; margin: .3rem .4rem .3rem 0;
            font-weight: 800; font-size: 1.05rem;}
-    .pill.on {background: #6B7F3A; color: #fff; box-shadow: 0 4px 12px rgba(107,127,58,.4);}
-    .pill.off {background: #EEF3DC; color: #9AA87A; text-decoration: line-through;}
-    .card {background: #fff; border: 1px solid #DDE6C0; border-radius: 18px; padding: 1.2rem 1.3rem; height: 100%;
-           box-shadow: 0 4px 16px rgba(79,98,40,.08); transition: transform .2s, box-shadow .2s;}
-    .card:hover {transform: translateY(-4px); box-shadow: 0 10px 24px rgba(79,98,40,.18);}
-    .card .ico {font-size: 2rem;} .card h4 {margin: .4rem 0 .3rem 0; color: #4F6228;}
-    .card p {margin: 0; font-size: .93rem; color: #3b4a22;}
-    .res {border-radius: 20px; padding: 1.4rem 1.6rem; color: #fff; margin-bottom: .6rem;}
-    .res.ok {background: linear-gradient(135deg, #4F6228, #7C9A2E); box-shadow: 0 10px 26px rgba(79,98,40,.35);}
-    .res.no {background: linear-gradient(135deg, #B26A00, #E39A1B); box-shadow: 0 10px 26px rgba(178,106,0,.3);}
-    .res .sub {font-size: .95rem; opacity: .9;} .res .big {font-size: 3rem; font-weight: 800; line-height: 1.1;}
-    .res .conf {font-size: 1.05rem; margin-top: .2rem;}
-    [data-testid="stMetric"] {background: #EEF3DC; border-radius: 14px; padding: .8rem 1rem;}
+    .pill.on {background: linear-gradient(135deg, #00C853, #00E676); color: #00160a !important;
+              box-shadow: 0 0 16px rgba(0,230,118,.5);}
+    .pill.off {background: #121212; color: #6b6b6b !important; text-decoration: line-through; border: 1px solid #2a2a2a;}
+
+    /* ================= TARJETAS ================= */
+    .card {background: linear-gradient(160deg, rgba(15,15,15,.92), rgba(10,26,16,.92)); border: 1px solid #1f4a30;
+           border-radius: 20px; padding: 1.3rem 1.4rem; height: 100%; backdrop-filter: blur(6px);
+           transition: transform .2s, box-shadow .2s, border-color .2s;}
+    .card:hover {transform: translateY(-5px); border-color: #00E676; box-shadow: 0 0 26px rgba(0,230,118,.28);}
+    .card .ico {font-size: 2.1rem;}
+    .card h4 {margin: .5rem 0 .3rem 0; color: #00E676; font-weight: 800;}
+    .card p {margin: 0; font-size: .93rem; color: #dbe7df;}
+
+    /* ================= RESULTADO ================= */
+    .res {border-radius: 24px; padding: 1.6rem 1.8rem; color: #fff; margin-bottom: .8rem;}
+    .res.ok {background: linear-gradient(135deg, #04210f, #0a5c2b 60%, #00C853);
+             border: 1px solid #00E676; animation: pulso 2.4s infinite; box-shadow: 0 0 34px rgba(0,230,118,.38);}
+    .res.no {background: linear-gradient(135deg, #1f1200, #6b3d00 60%, #E39A1B);
+             border: 1px solid #ffb74d; box-shadow: 0 0 30px rgba(255,167,38,.3);}
+    .res .sub {font-size: .95rem; color: #fff; opacity: .94; letter-spacing: .5px;}
+    .res .big {font-size: 3.4rem; font-weight: 800; line-height: 1.1; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,.3);}
+    .res .conf {font-size: 1.05rem; margin-top: .3rem; color: #fff;}
+
+    /* ================= COMPONENTES STREAMLIT ================= */
+    [data-testid="stMetric"] {background: rgba(13,13,13,.9); border: 1px solid #1f4a30; border-radius: 16px; padding: .9rem 1.1rem;}
+    [data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * {color: #cfe0d5 !important;}
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] * {color: #00E676 !important;}
+
+    .stTabs [data-baseweb="tab-list"] {gap: .4rem; border-bottom: 1px solid #1f4a30;}
     .stTabs [data-baseweb="tab"] {font-weight: 600; font-size: 1rem;}
-    .pie {text-align: center; color: #6B7F3A; font-size: .85rem; margin-top: 2rem;}
+    .stTabs [data-baseweb="tab"] p {color: #b9cfc0 !important;}
+    .stTabs [aria-selected="true"] p {color: #00E676 !important;}
+    .stTabs [data-baseweb="tab-highlight"] {background-color: #00E676 !important;}
+
+    /* Cargador de archivos */
+    [data-testid="stFileUploaderDropzone"] {background: rgba(13,13,13,.92); border: 2px dashed #25a35a; border-radius: 16px;}
+    [data-testid="stFileUploaderDropzone"], [data-testid="stFileUploaderDropzone"] span,
+    [data-testid="stFileUploaderDropzone"] small, [data-testid="stFileUploaderDropzone"] div {color: #e6f3ea !important;}
+    [data-testid="stFileUploaderDropzone"] button, [data-testid="stFileUploaderDropzone"] button * {
+        background: #00E676 !important; color: #00160a !important; font-weight: 700; border: none !important; border-radius: 10px;}
+    [data-testid="stFileUploaderFile"], [data-testid="stFileUploaderFile"] * {color: #fff !important;}
+
+    /* Camara */
+    [data-testid="stCameraInput"] {background: rgba(13,13,13,.92); border: 1px solid #1f4a30; border-radius: 16px; padding: .6rem;}
+    [data-testid="stCameraInput"] button, [data-testid="stCameraInput"] button * {
+        background: #00E676 !important; color: #00160a !important; font-weight: 700; border-radius: 10px; border: none !important;}
+
+    /* Lista desplegable de ejemplos */
+    div[data-baseweb="select"] > div {background: #0d0d0d !important; border: 1px solid #25a35a !important; border-radius: 12px;}
+    div[data-baseweb="select"] *, div[data-baseweb="select"] svg {color: #ffffff !important; fill: #ffffff !important;}
+    div[data-baseweb="popover"], div[data-baseweb="popover"] ul, div[data-baseweb="menu"] {background: #0d0d0d !important;}
+    div[data-baseweb="popover"] li, div[data-baseweb="popover"] li * {color: #ffffff !important; background: #0d0d0d !important;}
+    div[data-baseweb="popover"] li:hover, div[data-baseweb="popover"] li[aria-selected="true"] {background: #0e3a20 !important;}
+
+    [data-testid="stRadio"] label p {color: #ffffff !important; font-weight: 600;}
+    [data-testid="stExpander"] {background: rgba(13,13,13,.9); border: 1px solid #1f4a30; border-radius: 14px;}
+    [data-testid="stExpander"] summary, [data-testid="stExpander"] summary * {color: #ffffff !important;}
+    [data-testid="stAlert"] {background: rgba(13,26,18,.92); border: 1px solid #1f4a30; border-radius: 14px;}
+    [data-testid="stAlert"] * {color: #e6f3ea !important;}
+    .stProgress > div > div > div > div {background: linear-gradient(90deg, #00C853, #00E676);}
+    .pie {text-align: center; color: #86b99a; font-size: .85rem; margin-top: 2.2rem;}
+
+    /* Boton de subir archivo: solo dice "Cargar" */
+    [data-testid="stFileUploaderDropzone"] button {position: relative; font-size: 0 !important; min-width: 130px; min-height: 42px;}
+    [data-testid="stFileUploaderDropzone"] button * {display: none !important;}
+    [data-testid="stFileUploaderDropzone"] button::after {content: "Cargar"; display: block; font-size: 1rem;
+        font-weight: 800; color: #00160a; font-family: 'Poppins', sans-serif;}
+
+    /* Texto de ayuda en español */
+    [data-testid="stFileUploaderDropzone"] small {font-size: 0 !important;}
+    [data-testid="stFileUploaderDropzone"] small::after {content: "Máximo 10 MB por archivo • JPG, PNG, BMP, WEBP";
+        font-size: .85rem; color: #cfe0d5; font-family: 'Poppins', sans-serif;}
+
+    /* Evita que los iconos de Streamlit se vean como texto */
+    [data-testid="stIconMaterial"], .material-symbols-rounded {font-family: 'Material Symbols Rounded' !important;}
     </style>
+
+    <div class="flotantes" translate="no"><span>💵</span><span>💰</span><span>💵</span><span>💸</span><span>💵</span><span>💰</span></div>
+
     <div class="hero">
       <div class="bill">💵</div>
       <h1>Reconocedor de<br>billetes mexicanos</h1>
-      <p>Sube una foto o usa tu cámara y descubre al instante la denominación del billete,
+      <p>Sube una foto o usa tu cámara y descubre al instante cuántos <b>pesos</b> vale el billete,
          con su nivel de confianza y el análisis completo.</p>
       <span class="chip">Visión por computadora</span><span class="chip">OpenCV</span>
       <span class="chip">Histograma HSV</span><span class="chip">ORB + RANSAC</span>
@@ -112,9 +255,9 @@ tab_probar, tab_como, tab_acerca = st.tabs(["🔍 Probar", "⚙️ Cómo funcion
 
 # ------------------------------------------------------------------ PROBAR
 with tab_probar:
-    pills = "".join('<span class="pill %s">$%d</span>' % ("on" if d in activas else "off", d)
+    pills = "".join('<span class="pill %s" translate="no">%d pesos</span>' % ("on" if d in activas else "off", d)
                     for d in billetes.DENOMINACIONES)
-    st.markdown("**Denominaciones disponibles:** " + pills, unsafe_allow_html=True)
+    st.markdown("**Denominaciones disponibles (pesos mexicanos):** " + pills, unsafe_allow_html=True)
 
     if not plantillas:
         st.error("No hay plantillas disponibles. Agrega imágenes en plantillas/20, plantillas/50, etc.")
@@ -155,8 +298,8 @@ with tab_probar:
             mostrar_imagen(bgr_a_rgb(anotada))
         with der:
             if denominacion is not None:
-                st.markdown('<div class="res ok"><div class="sub">✅ Billete identificado</div>'
-                            '<div class="big">$%d MXN</div><div class="conf">Confianza %.1f%%</div></div>'
+                st.markdown('<div class="res ok" translate="no"><div class="sub">✅ BILLETE IDENTIFICADO · PESOS MEXICANOS (MXN)</div>'
+                            '<div class="big">%d pesos</div><div class="conf">Confianza %.1f%%</div></div>'
                             % (denominacion, confianza * 100), unsafe_allow_html=True)
             else:
                 st.markdown('<div class="res no"><div class="sub">⚠️ No se pudo identificar con suficiente confianza</div>'
@@ -166,8 +309,8 @@ with tab_probar:
             c1, c2 = st.columns(2)
             c1.metric("Segmentación", "Detectado" if valido else "Imagen completa")
             c2.metric("Umbral de aceptación", "%d%%" % round(billetes.UMBRAL_ACEPTACION * 100))
-            st.markdown("**Puntaje por denominación**")
-            st.bar_chart({"$%d" % d: round(s, 3) for d, s in sorted(detalle.items())}, y_label="Puntaje")
+            st.markdown("**Puntaje por denominación (pesos)**")
+            st.bar_chart({"%d pesos" % d: round(s, 3) for d, s in sorted(detalle.items())}, y_label="Puntaje")
         with st.expander("Ver imagen rectificada (600 × 280 px)"):
             mostrar_imagen(bgr_a_rgb(recorte), caption="Recorte normalizado que recibe el clasificador")
 
@@ -191,7 +334,7 @@ with tab_acerca:
     izq, der = st.columns(2)
     with izq:
         st.subheader("Proyecto")
-        st.markdown("Aplicación de visión por computadora que identifica billetes mexicanos usando **Python, OpenCV "
+        st.markdown("Aplicación de visión por computadora que identifica billetes mexicanos (pesos) usando **Python, OpenCV "
                     "y Streamlit**.\n\n"
                     "**Universidad Autónoma del Estado de México**  \nCentro Universitario UAEM Nezahualcóyotl  \n"
                     "Ingeniería en Sistemas Inteligentes · Semestre noveno%s" % (" · Grupo %s" % GRUPO if GRUPO else ""))
