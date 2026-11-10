@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Validar mensajes del PR
-        run: python3 scripts/check_commit_msg.py --range "origin/${{ github.base_ref }}..HEAD"
+        run: python3 Ejecucion/scripts/check_commit_msg.py --range "origin/${{ github.base_ref }}..HEAD"
 
   test:
     name: Pruebas automaticas
@@ -34,9 +34,9 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-          cache-dependency-path: requirements-dev.txt
-      - run: pip install -r requirements-dev.txt
-      - run: python -m pytest -v
+          cache-dependency-path: Ejecucion/requirements-dev.txt
+      - run: pip install -r Ejecucion/requirements-dev.txt
+      - run: python -m pytest -v -c Ejecucion/pytest.ini
 
   security:
     name: Seguridad, dependencias y licencias
@@ -47,16 +47,16 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-          cache-dependency-path: requirements-dev.txt
-      - run: pip install -r requirements-dev.txt
+          cache-dependency-path: Ejecucion/requirements-dev.txt
+      - run: pip install -r Ejecucion/requirements-dev.txt
       - name: Secretos escritos en el codigo
-        run: python scripts/scan_secrets.py
+        run: python Ejecucion/scripts/scan_secrets.py
       - name: Analisis estatico (bandit)
-        run: bandit -q -c bandit.yaml -r Back Front Iniciar_Visual_Studio.py scripts
+        run: bandit -q -c Ejecucion/bandit.yaml -r Back Front Ejecucion/scripts Ejecucion/Iniciar_Visual_Studio.py
       - name: Vulnerabilidades conocidas en dependencias
-        run: pip-audit -r requirements.lock.txt
+        run: pip-audit -r Ejecucion/requirements.lock.txt
       - name: Licencias compatibles con la politica
-        run: python scripts/check_licenses.py
+        run: python Ejecucion/scripts/check_licenses.py
 
   docker:
     name: Imagen Docker (build + prueba de arranque)
@@ -67,9 +67,9 @@ jobs:
       - name: Lint del Dockerfile (hadolint)
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: Dockerfile
+          dockerfile: Ejecucion/Dockerfile
       - name: Construir imagen
-        run: docker build -t reconocedor-billetes:ci .
+        run: docker build -f Ejecucion/Dockerfile -t reconocedor-billetes:ci .
       - name: Arrancar y esperar el healthcheck
         run: |
           docker run -d --name app -p 8501:8501 reconocedor-billetes:ci
@@ -98,6 +98,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
+          file: Ejecucion/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.ref_name }}

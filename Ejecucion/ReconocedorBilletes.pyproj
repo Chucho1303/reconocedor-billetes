@@ -4,9 +4,9 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8FBB9E1B-2C0A-4D45-A1D2-8E17B2B6C901}</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>..</ProjectHome>
     <ProjectTypeGuids>{888888A0-9F3D-457C-B088-3A5042F75D52}</ProjectTypeGuids>
-    <StartupFile>Iniciar_Visual_Studio.py</StartupFile>
+    <StartupFile>Ejecucion\Iniciar_Visual_Studio.py</StartupFile>
     <SearchPath>Back</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -16,30 +16,32 @@
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Iniciar_Visual_Studio.py" />
+    <Compile Include="Ejecucion\Iniciar_Visual_Studio.py" />
     <Compile Include="Back\billetes.py" />
     <Compile Include="Back\billetes_config.py" />
     <Compile Include="Front\app.py" />
-    <Compile Include="scripts\*.py" />
-    <Compile Include="tests\*.py" />
+    <Compile Include="Ejecucion\scripts\*.py" />
+    <Compile Include="Back\tests\*.py" />
+    <Compile Include="Ejecucion\tests\*.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="requirements*.txt" />
-    <Content Include="Dockerfile" />
-    <Content Include="docker-compose.yml" />
-    <Content Include=".env.example" />
+    <Content Include="Ejecucion\requirements*.txt" />
+    <Content Include="Ejecucion\Dockerfile" />
+    <Content Include="Ejecucion\docker-compose.yml" />
+    <Content Include="Ejecucion\.env.example" />
     <Content Include=".github\**\*" />
-    <Content Include="docs\*.md" />
+    <Content Include="Ejecucion\docs\*.md" />
     <Content Include="*.md" />
-    <Content Include=".streamlit\config.toml" />
+    <Content Include="Front\.streamlit\config.toml" />
     <Content Include="Back\plantillas\**\*" />
     <Content Include="Front\ejemplos\**\*" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Ejecucion\" />
-    <Folder Include="scripts\" />
-    <Folder Include="tests\" />
-    <Folder Include="docs\" />
+    <Folder Include="Ejecucion\scripts\" />
+    <Folder Include="Ejecucion\docs\" />
+    <Folder Include="Ejecucion\tests\" />
+    <Folder Include="Back\tests\" />
     <Folder Include="Back\plantillas\20\" />
     <Folder Include="Back\plantillas\50\" />
     <Folder Include="Back\plantillas\100\" />

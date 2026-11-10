@@ -7,7 +7,7 @@ import pytest
 
 import billetes
 
-RAIZ = Path(__file__).resolve().parent.parent
+RAIZ = Path(__file__).resolve().parents[2]
 EJEMPLOS = RAIZ / "Front" / "ejemplos"
 
 

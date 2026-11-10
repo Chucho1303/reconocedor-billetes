@@ -2,8 +2,8 @@
 * text=auto
 *.bat text eol=crlf
 *.sh text eol=lf
-.githooks/* text eol=lf
-Dockerfile text eol=lf
+Ejecucion/hooks/* text eol=lf
+Ejecucion/Dockerfile text eol=lf
 *.jpg binary
 *.jpeg binary
 *.png binary

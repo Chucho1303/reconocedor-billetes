@@ -1,10 +1,10 @@
 #!/bin/sh
 # Hook de Git: rechaza commits que no sigan Conventional Commits + referencia a tarea.
-# Activar una vez por clon:  git config core.hooksPath .githooks
+# Activar una vez por clon:  git config core.hooksPath Ejecucion/hooks
 RAIZ="$(git rev-parse --show-toplevel)"
 for PY in python3 python py; do
   if command -v "$PY" >/dev/null 2>&1; then
-    exec "$PY" "$RAIZ/scripts/check_commit_msg.py" "$1"
+    exec "$PY" "$RAIZ/Ejecucion/scripts/check_commit_msg.py" "$1"
   fi
 done
 echo "No se encontro Python para validar el mensaje de commit." >&2

@@ -61,7 +61,7 @@ def main(argv):
             malos += 1
             print("[%s] %s" % (ident, e))
     if malos:
-        print("\nCommit rechazado. Consulta CONTRIBUTING.md.")
+        print("\nCommit rechazado. Consulta .github/CONTRIBUTING.md.")
         return 1
     print("OK: %d mensaje(s) de commit validos." % len(mensajes))
     return 0

@@ -1,7 +1,7 @@
 # Backlog e historial de tareas
 
 Cada commit del repositorio referencia una de estas tareas (`#N`) para mantener la trazabilidad.
-Para crearlas en GitHub con la misma numeración, ejecuta `scripts/crear_issues.sh` en un repositorio
+Para crearlas en GitHub con la misma numeración, ejecuta `Ejecucion/scripts/crear_issues.sh` en un repositorio
 nuevo y vacío (GitHub numera los issues en orden: #1, #2, …).
 
 | # | Tarea | Estado |

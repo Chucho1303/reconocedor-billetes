@@ -3,7 +3,7 @@
 ## Flujo de trabajo
 
 1. Toda tarea nace como **issue** (GitHub Issues / Jira / Trello) y tiene un número o clave.
-2. Crea una rama: `feat/12-descripcion-corta`, `fix/15-umbral`, `docs/20-readme`.
+2. Crea una rama: `feat/12-descripcion-corta`, `fix/15-umbral`, `Ejecucion/docs/20-readme`.
 3. Haz commits pequeños con **Conventional Commits** y la referencia a la tarea.
 4. Abre un Pull Request hacia `main`; el CI debe pasar (pruebas, seguridad, licencias, Docker).
 
@@ -40,25 +40,25 @@ build(deps): fija versiones exactas de dependencias (#10)
 ## Activar las validaciones locales (una vez por clon)
 
 ```bash
-git config core.hooksPath .githooks     # rechaza commits que incumplan el formato
-git config commit.template .gitmessage  # plantilla de mensaje
+git config core.hooksPath Ejecucion/hooks     # rechaza commits que incumplan el formato
+git config commit.template Ejecucion/.gitmessage  # plantilla de mensaje
 ```
 
 El mismo validador corre en el CI sobre todos los commits de cada Pull Request:
-`python scripts/check_commit_msg.py --range origin/main..HEAD`.
+`python Ejecucion/scripts/check_commit_msg.py --range origin/main..HEAD`.
 
 ## Antes de abrir un PR
 
 ```bash
-pip install -r requirements-dev.txt
-python -m pytest
-python scripts/scan_secrets.py
-bandit -q -c bandit.yaml -r Back Front Iniciar_Visual_Studio.py scripts
-python scripts/check_licenses.py
+pip install -r Ejecucion/requirements-dev.txt
+python -m pytest -c Ejecucion/pytest.ini
+python Ejecucion/scripts/scan_secrets.py
+bandit -q -c Ejecucion/bandit.yaml -r Back Front Ejecucion/scripts Ejecucion/Iniciar_Visual_Studio.py
+python Ejecucion/scripts/check_licenses.py
 ```
 (En Windows: `Ejecucion\verificar.bat` ejecuta todo.)
 
 ## Reglas de oro
 
-- Nunca subas `.env`, llaves ni contraseñas (ver `docs/SEGURIDAD.md`).
+- Nunca subas `.env`, llaves ni contraseñas (ver `Ejecucion/docs/SEGURIDAD.md`).
 - Una funcionalidad que no está en el backlog no entra al repositorio (evitar *scope creep*).

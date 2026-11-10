@@ -2,13 +2,13 @@
 version: 2
 updates:
   - package-ecosystem: pip
-    directory: "/"
+    directory: "/Ejecucion"
     schedule:
       interval: weekly
     commit-message:
       prefix: "build(deps)"
   - package-ecosystem: docker
-    directory: "/"
+    directory: "/Ejecucion"
     schedule:
       interval: weekly
     commit-message:

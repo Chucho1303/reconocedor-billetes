@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Audita las licencias de las dependencias INSTALADAS contra la politica del proyecto.
 
-Politica (docs/DEPENDENCIAS_Y_LICENCIAS.md):
+Politica (Ejecucion/docs/DEPENDENCIAS_Y_LICENCIAS.md):
   - Permitidas: MIT, BSD, Apache-2.0, PSF, ISC, Zlib, 0BSD, CC0, MIT-CMU.
   - Permitidas con aviso: MPL-2.0 (copyleft debil por archivo; solo uso sin modificar).
   - Prohibidas: GPL, AGPL, LGPL, SSPL, "Proprietary" / "Commercial" (incompatibles con una
     distribucion comercial sin revision legal).
-Uso:  python scripts/check_licenses.py [--markdown salida.md]
+Uso:  python Ejecucion/scripts/check_licenses.py [--markdown salida.md]
 """
 import json
 import re

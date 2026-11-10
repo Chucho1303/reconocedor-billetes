@@ -14,19 +14,19 @@ Toda configuración variable entra por **variables de entorno** (`Back/billetes_
 | `BILLETES_MAX_UPLOAD_MB` | Tamaño máximo de imagen | `10` |
 | `BILLETES_EQUIPO` / `BILLETES_GRUPO` | Datos mostrados en la interfaz | marcadores |
 
-- Desarrollo local: copia `.env.example` a `.env` (ignorado por Git).
-- Docker: `docker compose` lee `.env` o las variables del servidor.
+- Desarrollo local: copia `Ejecucion/.env.example` a `Ejecucion/.env` (ignorado por Git).
+- Docker: `docker compose` lee `Ejecucion/.env` o las variables del servidor.
 - CI/CD: el único token usado (`GITHUB_TOKEN`, para publicar la imagen) viene de `secrets.*` de GitHub.
 
 Hoy la aplicación **no necesita** ninguna llave externa. Si en el futuro se agrega una (base de datos,
-API de terceros), se declara en `.env.example` sin valor real y se lee con `os.environ`.
+API de terceros), se declara en `Ejecucion/.env.example` sin valor real y se lee con `os.environ`.
 
 ## Controles automáticos
 
 | Control | Herramienta | Dónde corre |
 |---|---|---|
-| Secretos escritos en código (llaves AWS/Google/GitHub/Slack, claves privadas, `password = "..."`, URLs con usuario:clave) | `scripts/scan_secrets.py` | CI + `Ejecucion/verificar.bat` |
-| Vulnerabilidades del código (filtros básicos) | `bandit` (`bandit.yaml`) | CI |
+| Secretos escritos en código (llaves AWS/Google/GitHub/Slack, claves privadas, `password = "..."`, URLs con usuario:clave) | `Ejecucion/scripts/scan_secrets.py` | CI + `Ejecucion/verificar.bat` |
+| Vulnerabilidades del código (filtros básicos) | `bandit` (`Ejecucion/bandit.yaml`) | CI |
 | Vulnerabilidades conocidas en dependencias | `pip-audit` | CI + Dependabot |
 | Archivos secretos fuera del repositorio | `.gitignore` (`.env`, `*.pem`, `*.key`, `secrets/`) | Git |
 
@@ -40,7 +40,7 @@ API de terceros), se declara en `.env.example` sin valor real y se lee con `os.e
 - El HTML personalizado de la interfaz (`unsafe_allow_html`) solo incluye texto fijo o números
   calculados por la aplicación; nunca texto escrito por el usuario.
 - Contenedor Docker: se ejecuta con usuario sin privilegios (`uid 10001`), `no-new-privileges`, sin
-  `.env` dentro de la imagen (`.dockerignore`).
+  `.env` dentro de la imagen (`Ejecucion/Dockerfile.dockerignore`).
 - Línea de comandos: la denominación solo acepta valores de una lista cerrada, así que no hay
   recorrido de rutas al registrar plantillas.
 

@@ -7,7 +7,7 @@ if sys.version_info < (3, 12):
     raise SystemExit("Se requiere Python 3.12 o superior (tienes %d.%d). Instala una version nueva y "
                      "selecciona ese interprete en Visual Studio." % sys.version_info[:2])
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent      # raiz del repositorio
 APP = ROOT / "Front" / "app.py"
 
 if not APP.exists():
@@ -15,5 +15,6 @@ if not APP.exists():
 
 print("Iniciando el reconocedor de billetes...")
 print("Cuando Streamlit arranque, abre la direccion local que aparezca abajo.")
-cmd = [sys.executable, "-m", "streamlit", "run", str(APP), "--server.address", "localhost"]
-raise SystemExit(subprocess.call(cmd, cwd=str(ROOT)))
+# cwd = Front para que Streamlit encuentre Front/.streamlit/config.toml
+cmd = [sys.executable, "-m", "streamlit", "run", "app.py", "--server.address", "localhost"]
+raise SystemExit(subprocess.call(cmd, cwd=str(ROOT / "Front")))

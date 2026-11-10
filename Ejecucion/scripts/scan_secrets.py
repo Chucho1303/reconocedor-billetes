@@ -3,7 +3,7 @@
 
 Revisa los archivos versionados por Git (o todos los de la carpeta si no hay Git)
 y falla con codigo 1 si encuentra contrasenas, llaves de API, tokens o llaves
-privadas. Uso:  python scripts/scan_secrets.py [carpeta]
+privadas. Uso:  python Ejecucion/scripts/scan_secrets.py [carpeta]
 """
 import re
 import subprocess

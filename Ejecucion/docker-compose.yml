@@ -1,0 +1,16 @@
+# Despliegue con un solo comando:  docker compose -f Ejecucion/docker-compose.yml up --build
+# La configuracion llega por variables de entorno (archivo Ejecucion/.env local, nunca versionado).
+services:
+  reconocedor:
+    build:
+      context: ..
+      dockerfile: Ejecucion/Dockerfile
+    image: reconocedor-billetes:latest
+    ports:
+      - "8501:8501"
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

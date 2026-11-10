@@ -5,15 +5,15 @@
 1. Instala Visual Studio 2022 con la carga de trabajo **Desarrollo de Python**.
 2. Instala Python 3.12 o superior y marca la opción para agregar Python al PATH.
 3. Descomprime esta carpeta completa.
-4. Abre `ReconocedorBilletes.sln` desde Visual Studio.
+4. Abre `Ejecucion\ReconocedorBilletes.sln` desde Visual Studio.
 5. Si Visual Studio solicita seleccionar un intérprete, elige tu instalación de Python 3.12+.
 6. Abre **Ver > Terminal** y ejecuta una sola vez:
 
    ```powershell
-   python -m pip install -r requirements.txt
+   python -m pip install -r Ejecucion/requirements.txt
    ```
 
-7. En el Explorador de soluciones, clic derecho sobre `Iniciar_Visual_Studio.py` y elige **Establecer como archivo de inicio** si no aparece ya seleccionado.
+7. En el Explorador de soluciones, clic derecho sobre `Ejecucion\Iniciar_Visual_Studio.py` y elige **Establecer como archivo de inicio** si no aparece ya seleccionado.
 8. Presiona **F5** o **Ctrl+F5**. Streamlit iniciará el servidor y mostrará una dirección local; normalmente `http://localhost:8501`. Ábrela en tu navegador.
 9. Para detener la aplicación, vuelve a Visual Studio y presiona **Mayús+F5** o cierra la terminal que ejecuta Streamlit.
 
@@ -22,14 +22,14 @@
 ## Ejecutar con Docker (despliegue repetible)
 
 ```bash
-cp .env.example .env          # opcional: ajusta la configuración
-docker compose up --build     # abre http://localhost:8501
+cp Ejecucion/.env.example Ejecucion/.env          # opcional: ajusta la configuración
+docker compose -f Ejecucion/docker-compose.yml up --build     # abre http://localhost:8501
 ```
 
 O sin compose:
 
 ```bash
-docker build -t reconocedor-billetes .
+docker build -f Ejecucion/Dockerfile -t reconocedor-billetes .
 docker run --rm -p 8501:8501 reconocedor-billetes
 ```
 
@@ -39,18 +39,18 @@ comprueba que arranca en cada Pull Request; al crear un tag `vX.Y.Z` la publica 
 
 ## Configuración y secretos
 
-Todo valor configurable se lee de variables de entorno (ver `.env.example` y `docs/SEGURIDAD.md`).
+Todo valor configurable se lee de variables de entorno (ver `Ejecucion/.env.example` y `Ejecucion/docs/SEGURIDAD.md`).
 **Nunca** se escriben contraseñas, llaves de API ni credenciales en el código; `.env` está en `.gitignore`.
 
 ## Pruebas y verificaciones
 
 ```bash
-pip install -r requirements-dev.txt
-python -m pytest                      # pruebas con las fotos reales de Front/ejemplos
-python scripts/scan_secrets.py        # busca credenciales escritas en el código
-bandit -q -c bandit.yaml -r Back Front Iniciar_Visual_Studio.py scripts
-python scripts/check_licenses.py      # política de licencias
-pip-audit -r requirements.lock.txt    # vulnerabilidades conocidas
+pip install -r Ejecucion/requirements-dev.txt
+python -m pytest -c Ejecucion/pytest.ini                      # pruebas con las fotos reales de Front/ejemplos
+python Ejecucion/scripts/scan_secrets.py        # busca credenciales escritas en el código
+bandit -q -c Ejecucion/bandit.yaml -r Back Front Ejecucion/scripts Ejecucion/Iniciar_Visual_Studio.py
+python Ejecucion/scripts/check_licenses.py      # política de licencias
+pip-audit -r Ejecucion/requirements.lock.txt    # vulnerabilidades conocidas
 ```
 
 En Windows basta con ejecutar `Ejecucion\verificar.bat`.
@@ -58,25 +58,26 @@ En Windows basta con ejecutar `Ejecucion\verificar.bat`.
 ## Convención de commits
 
 Conventional Commits con referencia a la tarea, por ejemplo `feat(back): agrega votación por fotogramas (#5)`.
-Para activar la validación en Windows ejecuta `Ejecucion\activar_hooks.bat` (o `git config core.hooksPath .githooks`). Detalles en `CONTRIBUTING.md`; historial de tareas en `docs/BACKLOG.md`.
+Para activar la validación en Windows ejecuta `Ejecucion\activar_hooks.bat` (o `git config core.hooksPath Ejecucion/hooks`). Detalles en `.github/CONTRIBUTING.md`; historial de tareas en `Ejecucion/docs/BACKLOG.md`.
 
 ## Dependencias y licencias
 
-Versiones fijadas en `requirements.txt` / `requirements.lock.txt`; inventario y política de licencias en
-`docs/DEPENDENCIAS_Y_LICENCIAS.md`. Licencia del proyecto: MIT (`LICENSE`).
+Versiones fijadas en `Ejecucion/requirements.txt` / `requirements.lock.txt`; inventario y política de licencias en
+`Ejecucion/docs/DEPENDENCIAS_Y_LICENCIAS.md`. Licencia del proyecto: MIT (`LICENSE`).
 
-## Estructura solicitada
-- `Ejecucion/`: lanzadores auxiliares de Windows.
-- `Back/`: motor OpenCV y plantillas.
-- `Front/`: interfaz Streamlit y fotografías de ejemplo.
-- `ReconocedorBilletes.sln` y `ReconocedorBilletes.pyproj`: solución y proyecto para Visual Studio.
-- `Iniciar_Visual_Studio.py`: punto de entrada de F5.
-- `requirements.txt`, `requirements.lock.txt`, `requirements-dev.txt`: dependencias fijadas.
-- `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`: despliegue y CI/CD.
-- `tests/`, `scripts/`, `docs/`: pruebas, herramientas de verificación y documentación.
+## Estructura del repositorio
+- `Back/`: motor OpenCV (`billetes.py`, `billetes_config.py`), plantillas por denominación y pruebas (`tests/`).
+- `Front/`: interfaz Streamlit (`app.py`), fotografías de ejemplo y `.streamlit/config.toml`.
+- `Ejecucion/`: todo lo necesario para ejecutar, desplegar y verificar:
+  - lanzadores de Windows (`iniciar.bat`, `registrar_plantilla.bat`, `verificar.bat`, `activar_hooks.bat`);
+  - `Iniciar_Visual_Studio.py`, `ReconocedorBilletes.sln` y `.pyproj` (Visual Studio);
+  - `Dockerfile`, `docker-compose.yml`, `requirements*.txt`, `.env.example`;
+  - `scripts/` (secretos, licencias, commits), `hooks/`, `tests/` y `docs/` (seguridad, licencias, backlog).
+- `.github/`: CI/CD (`workflows/ci.yml`), Dependabot, plantilla de PR, `CONTRIBUTING.md` y `SECURITY.md`.
 
 ## Plantillas disponibles
-El ZIP original incluye plantillas reales para $20, $50 y $1,000. Las carpetas de $100, $200 y $500 están preparadas, pero necesitan fotografías reales para entrenar esas denominaciones.
+`Back/plantillas/<denominación>/` contiene fotografías reales para $20, $50, $100, $200, $500 y $1,000. Para añadir más:
+`Ejecucion\registrar_plantilla.bat 100 "C:\Fotos\billete100.jpg"`.
 
 ## Importante
 El sistema estima la **denominación**; no certifica que un billete sea auténtico. El porcentaje mostrado es un puntaje de similitud del algoritmo, no una probabilidad estadística ni una validación bancaria.

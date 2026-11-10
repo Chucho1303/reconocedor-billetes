@@ -1,0 +1,17 @@
+# Contexto = raiz del repo. Solo lo necesario entra a la imagen.
+.git
+.github
+.vs
+.venv
+venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+**/.env
+**/.env.*
+Back/tests
+README.md
+LICENSE
+# De Ejecucion/ solo se necesita requirements.txt
+Ejecucion/*
+!Ejecucion/requirements.txt

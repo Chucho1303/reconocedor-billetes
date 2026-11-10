@@ -7,12 +7,12 @@ if not exist ".venv\Scripts\python.exe" (
     exit /b 1
 )
 call ".venv\Scripts\activate.bat"
-pip install -r requirements-dev.txt || goto :error
-python -m pytest || goto :error
-python scripts\scan_secrets.py || goto :error
-bandit -q -c bandit.yaml -r Back Front Iniciar_Visual_Studio.py scripts || goto :error
-python scripts\check_licenses.py || goto :error
-pip-audit -r requirements.lock.txt || goto :error
+pip install -r Ejecucion\requirements-dev.txt || goto :error
+python -m pytest -c Ejecucion\pytest.ini || goto :error
+python Ejecucion\scripts\scan_secrets.py || goto :error
+bandit -q -c Ejecucion\bandit.yaml -r Back Front Ejecucion\scripts Ejecucion\Iniciar_Visual_Studio.py || goto :error
+python Ejecucion\scripts\check_licenses.py || goto :error
+pip-audit -r Ejecucion\requirements.lock.txt || goto :error
 echo.
 echo TODAS LAS VERIFICACIONES PASARON.
 pause

@@ -11,7 +11,7 @@ Documento del punto **8. Gestión de Dependencias y Licencias**. Última auditor
 | Copyleft débil | MPL-2.0 | ⚠️ Permitida solo **sin modificar** el paquete |
 | Copyleft fuerte / restrictivas | GPL, AGPL, LGPL (como dependencia propia), SSPL, propietarias / comerciales | ❌ Prohibidas sin revisión legal |
 
-La política se hace cumplir automáticamente con `python scripts/check_licenses.py` (falla con
+La política se hace cumplir automáticamente con `python Ejecucion/scripts/check_licenses.py` (falla con
 código 1 si aparece una licencia prohibida o desconocida) y en el job **security** del CI.
 
 ## 2. Dependencias fijadas (repetibilidad)
@@ -25,7 +25,7 @@ código 1 si aparece una licencia prohibida o desconocida) y en el job **securit
 - Al momento de la auditoría **todas** las dependencias estaban en su última versión publicada
   (`pip list --outdated` no reportó ninguna, salvo la herramienta `pip` misma).
 - `.github/dependabot.yml` abre cada semana PRs para pip, Docker y GitHub Actions.
-- `pip-audit -r requirements.lock.txt` (en CI) consulta la base de vulnerabilidades de PyPI.
+- `pip-audit -r Ejecucion/requirements.lock.txt` (en CI) consulta la base de vulnerabilidades de PyPI.
   Resultado de la auditoría: **No known vulnerabilities found**.
 - Ninguna dependencia está abandonada: todas son proyectos activos con lanzamientos recientes.
 
@@ -87,9 +87,9 @@ El código propio se publica bajo **MIT** (ver `LICENSE`), compatible con todas 
 ## 6. Cómo repetir la auditoría
 
 ```bash
-pip install -r requirements-dev.txt
-python scripts/check_licenses.py                         # política de licencias
-python scripts/check_licenses.py --markdown licencias.md # tabla actualizada
-pip-audit -r requirements.lock.txt                       # vulnerabilidades
+pip install -r Ejecucion/requirements-dev.txt
+python Ejecucion/scripts/check_licenses.py                         # política de licencias
+python Ejecucion/scripts/check_licenses.py --markdown licencias.md # tabla actualizada
+pip-audit -r Ejecucion/requirements.lock.txt                       # vulnerabilidades
 pip list --outdated                                      # versiones nuevas
 ```

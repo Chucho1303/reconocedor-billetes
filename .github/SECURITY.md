@@ -5,5 +5,5 @@ Abre un *issue* privado o escribe a los integrantes del equipo (ver pestaña "Ac
 No publiques detalles de la falla ni credenciales en issues o Pull Requests públicos.
 
 ## Reglas del proyecto
-- Ninguna contraseña, llave de API o credencial se escribe en el código: se usan variables de entorno (`.env.example`).
-- Los controles automáticos (escáner de secretos, bandit, pip-audit) corren en cada cambio; detalle en `docs/SEGURIDAD.md`.
+- Ninguna contraseña, llave de API o credencial se escribe en el código: se usan variables de entorno (`Ejecucion/.env.example`).
+- Los controles automáticos (escáner de secretos, bandit, pip-audit) corren en cada cambio; detalle en `Ejecucion/docs/SEGURIDAD.md`.

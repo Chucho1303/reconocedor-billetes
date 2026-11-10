@@ -2,8 +2,8 @@
 
 Regla de seguridad: NINGUN valor sensible (contrasenas, llaves de API, tokens,
 credenciales de produccion) se escribe en el codigo. Todo se lee desde variables
-de entorno o, en desarrollo local, desde un archivo ``.env`` que NO se sube a Git
-(ver ``.env.example`` y ``.gitignore``).
+de entorno o, en desarrollo local, desde un archivo ``Ejecucion/.env`` que NO se sube a Git
+(ver ``Ejecucion/.env.example`` y ``.gitignore``).
 
 Este modulo debe importarse ANTES que ``cv2`` para que el limite de pixeles de
 OpenCV se aplique.
@@ -30,7 +30,7 @@ def _cargar_dotenv(ruta):
             os.environ.setdefault(clave, valor)
 
 
-_cargar_dotenv(ROOT_DIR / ".env")
+_cargar_dotenv(ROOT_DIR / "Ejecucion" / ".env")
 
 # Proteccion contra imagenes "bomba" (dimensiones gigantes que agotan la memoria).
 MAX_PIXELES = 50_000_000

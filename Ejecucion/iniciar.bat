@@ -17,7 +17,7 @@ if errorlevel 1 (
 echo.
 echo Instalando o verificando dependencias...
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r Ejecucion\requirements.txt
 if errorlevel 1 (
     echo.
     echo ERROR: No se pudieron instalar las dependencias.
@@ -26,5 +26,7 @@ if errorlevel 1 (
 )
 echo.
 echo Abriendo el reconocedor en el navegador...
-python -m streamlit run "Front\app.py"
+pushd Front
+python -m streamlit run app.py
+popd
 pause

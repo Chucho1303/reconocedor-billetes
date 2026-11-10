@@ -19,4 +19,4 @@ def test_acepta_variables_de_entorno(tmp_path):
 
 
 def test_el_proyecto_no_tiene_secretos():
-    assert scan_secrets.escanear(scan_secrets.Path(__file__).resolve().parent.parent) == []
+    assert scan_secrets.escanear(scan_secrets.Path(__file__).resolve().parents[2]) == []
