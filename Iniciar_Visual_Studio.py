@@ -3,6 +3,10 @@ from pathlib import Path
 import subprocess
 import sys
 
+if sys.version_info < (3, 12):
+    raise SystemExit("Se requiere Python 3.12 o superior (tienes %d.%d). Instala una version nueva y "
+                     "selecciona ese interprete en Visual Studio." % sys.version_info[:2])
+
 ROOT = Path(__file__).resolve().parent
 APP = ROOT / "Front" / "app.py"
 

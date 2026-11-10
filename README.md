@@ -58,7 +58,7 @@ En Windows basta con ejecutar `Ejecucion\verificar.bat`.
 ## Convención de commits
 
 Conventional Commits con referencia a la tarea, por ejemplo `feat(back): agrega votación por fotogramas (#5)`.
-Detalles y activación del hook en `CONTRIBUTING.md`; historial de tareas en `docs/BACKLOG.md`.
+Para activar la validación en Windows ejecuta `Ejecucion\activar_hooks.bat` (o `git config core.hooksPath .githooks`). Detalles en `CONTRIBUTING.md`; historial de tareas en `docs/BACKLOG.md`.
 
 ## Dependencias y licencias
 

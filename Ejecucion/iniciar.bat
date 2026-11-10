@@ -8,6 +8,12 @@ if not exist ".venv\Scripts\python.exe" (
     if errorlevel 1 python -m venv .venv
 )
 call ".venv\Scripts\activate.bat"
+python -c "import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)"
+if errorlevel 1 (
+    echo ERROR: se requiere Python 3.12 o superior. Instalalo y borra la carpeta .venv.
+    pause
+    exit /b 1
+)
 echo.
 echo Instalando o verificando dependencias...
 python -m pip install --upgrade pip
