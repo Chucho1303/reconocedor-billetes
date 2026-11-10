@@ -7,6 +7,8 @@
 | **Alcance** | `repo` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `docs/6-lanzadores-readme` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-03 a 2026-11-10 |
 
 ## Descripción
 
@@ -25,6 +27,16 @@ proyecto en el README.
 ## Cómo verificar
 
 Ejecutar `Ejecucion\iniciar.bat` en Windows y abrir `http://localhost:8501`.
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-03 | `3bb65ec` | Chucho1303 | iniciar.bat y registrar_plantilla.bat |
+| 2026-11-09 | `44ef125, c1ea161` | Jesus Perez Estrada | docs(repo): agrega lanzadores de Windows y README inicial (#6); docs: actualiza README, backlog y proyecto de Visual Studio (#6) |
+| 2026-11-10 | `071422b` | Chucho1303 | Revise README for improved clarity and structure |
 
 ## Relacionado
 

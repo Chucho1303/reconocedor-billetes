@@ -7,6 +7,8 @@
 | **Alcance** | `back` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `feat/5-modos-cli` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-09 |
 
 ## Descripción
 
@@ -26,6 +28,14 @@ Exponer el motor mediante una CLI (`Back/billetes.py`) con cuatro subcomandos.
 python Back/billetes.py imagen "Front/ejemplos/50 pesos.jpeg"
 python Back/billetes.py evaluar Back/plantillas --csv resultado.csv
 ```
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-09 | `905c405` | Jesus Perez Estrada | feat(back): agrega motor de reconocimiento y modos de línea de comandos (#2) |
 
 ## Relacionado
 

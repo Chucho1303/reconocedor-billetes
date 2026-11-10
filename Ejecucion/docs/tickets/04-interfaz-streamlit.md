@@ -7,6 +7,8 @@
 | **Alcance** | `front` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `feat/4-interfaz-streamlit` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-10-19 a 2026-11-09 |
 
 ## Descripción
 
@@ -29,6 +31,16 @@ Construir en `Front/app.py` una aplicación web para probar el reconocedor sin u
 pip install -r requirements.txt
 streamlit run Front/app.py     # http://localhost:8501
 ```
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-10-19 | `e3e2702` | Chucho1303 | Primera versión de app.py (Add files via upload) |
+| 2026-11-03 | `19f210b, 93bb919` | Chucho1303, Manuel1513 | app.py y fotos de ejemplo movidos a Front/ |
+| 2026-11-09 | `dba188c, a51a7c0` | Jesus Perez Estrada | feat(front): agrega interfaz web con Streamlit y fotos de ejemplo (#4); fix(repo): deja de ignorar la foto de ejemplo captura_01.jpg (#4) |
 
 ## Relacionado
 

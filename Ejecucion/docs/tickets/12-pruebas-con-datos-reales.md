@@ -7,6 +7,8 @@
 | **Alcance** | `back` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `test/12-pruebas-datos-reales` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-09 |
 
 ## Descripción
 
@@ -30,6 +32,14 @@ Probar el motor con las fotografías reales del repositorio, no con datos sinté
 pip install -r Ejecucion/requirements-dev.txt
 python -m pytest -v -c Ejecucion/pytest.ini
 ```
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-09 | `158546d, 46ada0d` | Jesus Perez Estrada | test(back): agrega pruebas con fotos reales y de configuración (#12); test(back): acepta plantillas adicionales de 100, 200 y 500 (#12) |
 
 ## Relacionado
 

@@ -7,6 +7,8 @@
 | **Alcance** | `front` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `feat/14-lectura-voz` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-10 |
 
 ## Descripción
 
@@ -32,6 +34,14 @@ streamlit run Front/app.py
 ```
 
 Subir una foto, esperar el resultado y pulsar **Escuchar resultado**.
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-10 | `a8930b8, bdf907e, 82b76cb` | Chucho1303 | Update app.py (x2); Implement voice reading for recognition results |
 
 ## Relacionado
 

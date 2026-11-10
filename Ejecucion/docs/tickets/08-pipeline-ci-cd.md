@@ -7,6 +7,8 @@
 | **Alcance** | `ci` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `ci/8-pipeline` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-09 a 2026-11-10 |
 
 ## Descripción
 
@@ -25,6 +27,15 @@ Automatizar la verificación de cada cambio y la publicación de la imagen en `.
 ## Cómo verificar
 
 Abrir un Pull Request y comprobar en la pestaña **Actions** que los jobs pasan.
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-09 | `e97dbc6` | Jesus Perez Estrada | ci: agrega pipeline de GitHub Actions y Dependabot (#8) |
+| 2026-11-10 | `40730f8` | Jesus Perez Estrada | build(docker): endurece Dockerfile y agrega hadolint al CI (#7) |
 
 ## Relacionado
 

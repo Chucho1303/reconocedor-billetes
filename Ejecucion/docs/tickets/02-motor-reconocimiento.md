@@ -7,6 +7,8 @@
 | **Alcance** | `back` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `feat/2-motor-reconocimiento` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-10-19 a 2026-11-09 |
 
 ## Descripción
 
@@ -32,6 +34,16 @@ denominación comparándolo contra plantillas reales.
 ```bash
 python -m pytest -c Ejecucion/pytest.ini Back/tests/test_billetes.py
 ```
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-10-19 | `0a4e57f, e3e2702` | Manuel1513, Chucho1303 | Primera versión de billetes.py (Add files via upload) |
+| 2026-11-03 | `a451eba` | Chucho1303 | billetes.py movido a Back/ |
+| 2026-11-09 | `905c405` | Jesus Perez Estrada | feat(back): agrega motor de reconocimiento y modos de línea de comandos (#2) |
 
 ## Relacionado
 

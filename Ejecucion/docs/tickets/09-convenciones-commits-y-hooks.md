@@ -7,6 +7,8 @@
 | **Alcance** | `repo` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `chore/9-convenciones-commits` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-09 a 2026-11-10 |
 
 ## Descripción
 
@@ -28,6 +30,15 @@ Garantizar trazabilidad: cada commit sigue Conventional Commits y referencia una
 python Ejecucion/scripts/check_commit_msg.py --range origin/main..HEAD
 python -m pytest -c Ejecucion/pytest.ini Ejecucion/tests/test_commit_msg.py
 ```
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-09 | `61cbeb7` | Jesus Perez Estrada | chore(repo): agrega validador de commits y hook de Git (#9) |
+| 2026-11-10 | `3cf636c` | Jesus Perez Estrada | chore(repo): agrega .gitattributes, hook portable y plantilla de PR (#9) |
 
 ## Relacionado
 

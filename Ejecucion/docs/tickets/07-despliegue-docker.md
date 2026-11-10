@@ -7,6 +7,8 @@
 | **Alcance** | `docker` |
 | **Responsable** | _por asignar_ |
 | **Rama sugerida** | `build/7-docker` |
+| **Registrado** | 2026-11-10 (retroactivo) |
+| **Trabajo realizado** | 2026-11-09 a 2026-11-10 |
 
 ## Descripción
 
@@ -26,6 +28,15 @@ Empaquetar la aplicación en una imagen para que se ejecute igual en cualquier m
 ```bash
 docker compose -f Ejecucion/docker-compose.yml up --build    # http://localhost:8501
 ```
+
+## Historial en el repositorio
+
+Fechas tomadas de los commits reales de `main` (`git log`). El ticket se registró después del trabajo.
+
+| Fecha | Commit | Autor | Qué se hizo |
+|---|---|---|---|
+| 2026-11-09 | `f63e74f` | Jesus Perez Estrada | build(docker): agrega Dockerfile y docker-compose para despliegue repetible (#7) |
+| 2026-11-10 | `40730f8` | Jesus Perez Estrada | build(docker): endurece Dockerfile y agrega hadolint al CI (#7) |
 
 ## Relacionado
 
