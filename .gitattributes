@@ -1,0 +1,9 @@
+# Fines de linea correctos en Windows y Linux (un .bat con LF o un hook con CRLF fallan)
+* text=auto
+*.bat text eol=crlf
+*.sh text eol=lf
+.githooks/* text eol=lf
+Dockerfile text eol=lf
+*.jpg binary
+*.jpeg binary
+*.png binary
