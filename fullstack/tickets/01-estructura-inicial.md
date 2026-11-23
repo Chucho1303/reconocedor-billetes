@@ -5,7 +5,7 @@
 | **Estado** | Hecho |
 | **Tipo** | `chore` |
 | **Alcance** | `repo` |
-| **Responsable** | _por asignar_ |
+| **Responsable** | _Jesus_ |
 | **Rama sugerida** | `chore/1-estructura-inicial` |
 | **Registrado** | 2026-11-10 (retroactivo) |
 | **Trabajo realizado** | 2026-11-03 a 2026-11-10 |
