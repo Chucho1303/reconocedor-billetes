@@ -5,7 +5,7 @@
 | **Estado** | Hecho |
 | **Tipo** | `feat` |
 | **Alcance** | `back` |
-| **Responsable** | _por asignar_ |
+| **Responsable** | _Manuel_ |
 | **Rama sugerida** | `feat/2-motor-reconocimiento` |
 | **Registrado** | 2026-11-10 (retroactivo) |
 | **Trabajo realizado** | 2026-10-19 a 2026-11-09 |
